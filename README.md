@@ -28,6 +28,7 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 | 2 | `pixel-cats` | Light. Pixel art of two fluffy cats, Pixel and Charlie, in a sunny room. |
 | 3 | `dark-fleet` | Dark and cinematic. A hooded warrior with a red energy blade, a wedge-shaped fleet and a moon-sized battle station. |
 | 4 | `neon-tokyo` | Dark. Pixel-art Tokyo at night: the Skytree across a full moon, Mt Fuji, the lit Tokyo Tower, neon katakana signs, the tail of a departing train, a scramble crossing, a cherry tree with red lanterns, and a cat on a vending machine. |
+| 5 | `marina-bay` | Dark. Pixel-art Singapore at night across Marina Bay: Marina Bay Sands with its SkyPark and a laser show, the Merlion spouting into the bay, the Downtown Core and the Singapore Flyer, the glowing Supertrees, the ArtScience Museum's lotus, a bumboat and fireworks. |
 
 ### Cosmos
 
@@ -44,6 +45,10 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 ### Neon Tokyo
 
 ![Neon Tokyo](preview-neon-tokyo.png)
+
+### Marina Bay
+
+![Marina Bay](preview-marina-bay.png)
 
 ## T3 Code
 

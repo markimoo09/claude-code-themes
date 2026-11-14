@@ -20,6 +20,11 @@
       "id": "neon-tokyo",
       "label": "Neon Tokyo",
       "description": "Pixel-art Tokyo at night: Skytree, Tokyo Tower, neon signs and sakura"
+    },
+    {
+      "id": "marina-bay",
+      "label": "Marina Bay",
+      "description": "Pixel-art Singapore at night: Marina Bay Sands, the Merlion and the Supertrees"
     }
   ]
 }

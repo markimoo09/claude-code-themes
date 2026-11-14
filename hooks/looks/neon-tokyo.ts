@@ -1,6 +1,7 @@
 import type { Look } from './types'
 
 import { makeColors } from '../make-colors.js'
+import { Art, GH, GW, H, PX, SCRIM, type Spot, W, glow, grad, hash, lattice, layout, px, scrimGradient, seeded, skyBands, visible, windowSet, windowsIn, windowsSvg } from './pixel'
 
 // Tokyo at night, drawn as pixel art. A full moon with the Skytree's lattice crossing it, Mt Fuji
 // dusky on the horizon, the orange-lit Tokyo Tower over a neon skyline of katakana signs
@@ -32,131 +33,6 @@ const { theme, problems } = makeColors({
     },
   },
 })
-
-// ---------- a pixel canvas ----------
-//
-// Every sprite is drawn into an Art, cell by cell, in art pixels (PX scene units each). It is
-// written out as one <path> per color: runs of a color on a row, merged down the rows into
-// rectangles where they line up. A fill can also be a pattern, such as the towers' lattices.
-
-const PX = 5
-const W = 1600
-const H = 1000
-const GW = W / PX // 320 art pixels across
-const GH = H / PX // 200 down
-
-const OFFSET = 4096
-const ROW = 16384
-
-type Run = { x: number; y: number; w: number; h: number; fill: string }
-
-class Art {
-  private readonly cells = new Map<number, string>()
-
-  set(x: number, y: number, fill: string | undefined): void {
-    const k = (Math.round(y) + OFFSET) * ROW + Math.round(x) + OFFSET
-
-    if (fill === undefined) {
-      this.cells.delete(k)
-    } else {
-      this.cells.set(k, fill)
-    }
-  }
-
-  has(x: number, y: number): boolean {
-    return this.cells.has((Math.round(y) + OFFSET) * ROW + Math.round(x) + OFFSET)
-  }
-
-  rect(x: number, y: number, w: number, h: number, fill: string): void {
-    for (let j = 0; j < h; j++) {
-      for (let i = 0; i < w; i++) {
-        this.set(x + i, y + j, fill)
-      }
-    }
-  }
-
-  disc(cx: number, cy: number, r: number, fill: string): void {
-    const R = Math.ceil(r)
-
-    for (let dy = -R; dy <= R; dy++) {
-      for (let dx = -R; dx <= R; dx++) {
-        if (dx * dx + dy * dy <= r * r + r * 0.5) {
-          this.set(cx + dx, cy + dy, fill)
-        }
-      }
-    }
-  }
-
-  svg(): string {
-    const rows = new Map<number, [number, string][]>()
-
-    for (const [k, fill] of this.cells) {
-      const y = Math.floor(k / ROW) - OFFSET
-      const row = rows.get(y) ?? []
-
-      row.push([(k % ROW) - OFFSET, fill])
-      rows.set(y, row)
-    }
-    const runs: Run[] = []
-    let open = new Map<string, Run>()
-
-    for (const y of [...rows.keys()].sort((a, b) => a - b)) {
-      const row = (rows.get(y) ?? []).sort((a, b) => a[0] - b[0])
-      const next = new Map<string, Run>()
-      let i = 0
-
-      while (i < row.length) {
-        const [x, fill] = row[i] ?? [0, '']
-        let j = i + 1
-
-        while (j < row.length && (row[j]?.[0] ?? 0) === (row[j - 1]?.[0] ?? 0) + 1 && row[j]?.[1] === fill) {
-          j++
-        }
-        const key = `${x},${j - i},${fill}`
-        const above = open.get(key)
-
-        if (above !== undefined && above.y + above.h === y) {
-          above.h++
-          next.set(key, above)
-        } else {
-          const run = { x, y, w: j - i, h: 1, fill }
-
-          runs.push(run)
-          next.set(key, run)
-        }
-        i = j
-      }
-      open = next
-    }
-    const byFill = new Map<string, string>()
-
-    for (const r of runs) {
-      byFill.set(r.fill, `${byFill.get(r.fill) ?? ''}M${r.x} ${r.y}h${r.w}v${r.h}h-${r.w}z`)
-    }
-
-    return [...byFill].map(([fill, d]) => `<path fill="${fill}" d="${d}"/>`).join('')
-  }
-}
-
-// An Art's paths at art-pixel scale, with an optional class.
-const px = (inner: string, cls?: string): string =>
-  `<g${cls === undefined ? '' : ` class="${cls}"`} transform="scale(${PX})">${inner}</g>`
-
-const hash = (x: number, y: number, s = 0): number => {
-  const n = Math.sin(x * 127.1 + y * 311.7 + s * 74.7) * 43758.5453
-
-  return n - Math.floor(n)
-}
-
-function seeded(seed: number): () => number {
-  let s = seed
-
-  return () => (s = (s * 16807) % 2147483647) / 2147483647
-}
-
-// A soft round glow from a gradient in <defs>, in art pixels.
-const glow = (cx: number, cy: number, rx: number, ry: number, id: string, opacity = 1, cls?: string): string =>
-  `<ellipse${cls === undefined ? '' : ` class="${cls}"`} cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${id})" opacity="${opacity}"/>`
 
 // ---------- katakana for the neon signs, 5 by 6 ----------
 
@@ -201,27 +77,6 @@ function sign(frame: Art, letters: Art, x: number, y: number, text: string, vert
   return [iw + 4, ih + 4]
 }
 
-// Lit windows: most still, a few in two sets that switch off and on at their own pace.
-type Windows = { still: Art; a: Art; b: Art }
-const windowSet = (): Windows => ({ still: new Art(), a: new Art(), b: new Art() })
-const WINDOW_COLORS = ['#ffd27a', '#ffd27a', '#ffd27a', '#fff0c2', '#86d8ff', '#86d8ff', '#ff8fd2']
-
-function windowsIn(win: Windows, rand: () => number, x: number, top: number, w: number, bottom: number, step: [number, number], size: [number, number], lit: number): void {
-  for (let wy = top + 2; wy + size[1] <= bottom; wy += step[1]) {
-    for (let wx = x + 2; wx + size[0] <= x + w - 1; wx += step[0]) {
-      const r = rand()
-
-      if (r < lit) {
-        const layer = r < lit * 0.1 ? win.a : r < lit * 0.2 ? win.b : win.still
-
-        layer.rect(wx, wy, size[0], size[1], WINDOW_COLORS[Math.floor(rand() * WINDOW_COLORS.length)] ?? '#ffd27a')
-      }
-    }
-  }
-}
-
-const windowsSvg = (win: Windows): string => px(win.still.svg()) + px(win.a.svg(), 'win-a') + px(win.b.svg(), 'win-b')
-
 // ---------- sky ----------
 
 const SKY: readonly [number, string][] = [
@@ -237,24 +92,7 @@ const SKY: readonly [number, string][] = [
   [152, '#702868'],
 ]
 
-// Bands of color down the sky, each meeting the next over a few rows of line dithering.
-function sky(): string {
-  const a = new Art()
-
-  for (let y = 0; y < GH; y++) {
-    let i = 0
-
-    while (i + 1 < SKY.length && (SKY[i + 1]?.[0] ?? GH) <= y) {
-      i++
-    }
-    const next = SKY[i + 1]
-    const d = next === undefined ? 0 : next[0] - y
-
-    a.rect(0, y, GW, 1, next !== undefined && (d === 1 || d === 3) ? next[1] : (SKY[i]?.[1] ?? '#08061a'))
-  }
-
-  return px(a.svg())
-}
+const sky = (): string => skyBands(SKY)
 
 function stars(): string {
   const rand = seeded(7)
@@ -1000,15 +838,12 @@ function vending(): string {
 // edges, the cherry tree low on the left, and the tail of a departing train at the right edge.
 // Phones have no sidebar, so all of it draws in.
 
-type Spot = [number, number, number]
 type Spots = Record<'moon' | 'skytree' | 'tower' | 'left' | 'right' | 'train' | 'sakura' | 'vend', Spot>
 
 const SKYLINE = 150 * PX // the skyline's foot, in scene units
 
 function spots(a: number, tallestA: number): Spots {
-  const v = Math.min(W, H * a)
-  const left = (W - v) / 2
-  const right = left + v
+  const { v, left, right } = visible(a)
   const shown = Math.min(H, W / tallestA)
   const top = (H - shown) / 2
   const bottom = top + shown
@@ -1029,46 +864,7 @@ function spots(a: number, tallestA: number): Spots {
   }
 }
 
-const f = (n: number): string => n.toFixed(0)
-const at = ([x, y, s]: Spot): string => `translate(${f(x)} ${f(y)}) scale(${s.toFixed(2)})`
-const css = ([x, y, s]: Spot): string => `transform: translate(${f(x)}px, ${f(y)}px) scale(${s.toFixed(2)});`
-// A dark veil behind the conversation, so the words stay readable over the busy middle of the
-// city: clear at the edges where the landmarks stand, darkest over the column of text (about 32%
-// to 80% across, past the app's sidebar). It is stretched to the visible width; on phones,
-// where words run edge to edge, to three times it, so only its even middle shows, a little lighter.
-function scrimRule(a: number): string {
-  const v = Math.min(W, H * a)
-  const left = (W - v) / 2
-  const [x, sx] = a < 0.8 ? [left - v, (3 * v) / W] : [left, v / W]
-
-  return `.at-scrim { transform: translate(${f(x)}px, 0px) scale(${sx.toFixed(3)}, 1); opacity: ${a < 0.8 ? 0.75 : 1}; }`
-}
-
-const rules = (p: Spots): string =>
-  (Object.keys(p) as (keyof Spots)[]).map(k => `.at-${k} { ${css(p[k])} }`).join(' ')
-
-// Widest first; each later band is narrower and wins where it applies.
-const BANDS = [2.2, 2.0, 1.8, 1.6, 1.4, 1.2, 1.0, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4]
-const LAYOUT = [
-  `  ${rules(spots(BANDS[0] ?? 2.2, 2.6))} ${scrimRule(BANDS[0] ?? 2.2)}`,
-  ...BANDS.map((high, i) => {
-    const low = BANDS[i + 1] ?? 0.3
-
-    return `  @media (max-aspect-ratio: ${Math.round(high * 100)}/100) { ${rules(spots(low, high))} ${scrimRule(low)} }`
-  }),
-].join('\n')
-
-// Where everything sits for a 16:10 window, written on the elements too, for a renderer that
-// reads no CSS (the preview image).
-const HOME = spots(1.6, 1.6)
-const placed = (k: keyof Spots, inner: string): string => `<g class="at-${k}" transform="${at(HOME[k])}">${inner}</g>`
-
-const grad = (id: string, color: string, opacity: number): string =>
-  `<radialGradient id="${id}"><stop offset="0" stop-color="${color}" stop-opacity="${opacity}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient>`
-
-// A 4 by 4 lattice of crossing diagonals, one art pixel per cell.
-const lattice = (id: string, bg: string, lit: string): string =>
-  `<pattern id="${id}" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="${bg}"/><path fill="${lit}" d="M0 0h1v1h-1zM1 1h1v1h-1zM2 2h1v1h-1zM3 3h1v1h-1zM3 0h1v1h-1zM2 1h1v1h-1zM1 2h1v1h-1zM0 3h1v1h-1z"/></pattern>`
+const { css: LAYOUT, placed } = layout(spots)
 
 const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" shape-rendering="crispEdges">
 <defs>
@@ -1078,11 +874,7 @@ ${lattice('st-lattice', '#26307a', '#7fb8ff')}
 ${grad('g-pink', '#ff4fa3', 0.5)}${grad('g-cyan', '#36e3ff', 0.45)}${grad('g-amber', '#ffb547', 0.45)}
 ${grad('g-orange', '#ff6a2a', 0.45)}${grad('g-violet', '#9c7bff', 0.4)}${grad('g-lantern', '#ff8a3d', 0.6)}
 ${grad('g-vend', '#a8e4ff', 0.45)}${grad('g-tail', '#ff4040', 0.5)}
-<linearGradient id="g-scrim" x1="0" x2="1">${(
-  [[0, 0], [0.19, 0], [0.33, 0.66], [0.78, 0.66], [0.88, 0], [1, 0]] as const
-)
-  .map(([o, a]) => `<stop offset="${o}" stop-color="#090713" stop-opacity="${a}"/>`)
-  .join('')}</linearGradient>
+${scrimGradient('#090713')}
 </defs>
 <style>
 ${LAYOUT}
@@ -1179,7 +971,7 @@ ${placed('right', reflection([[-54, 10, '#36e3ff'], [-20, 12, '#ffb547']]))}
 ${walkers()}
 ${placed('sakura', sakura())}
 ${placed('vend', vending())}
-<g class="at-scrim"><rect width="${W}" height="${H}" fill="url(#g-scrim)"/></g>
+${SCRIM}
 </svg>`
 
 export const neonTokyo: Look = {

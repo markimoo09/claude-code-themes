@@ -57,7 +57,7 @@ test('a pick is written to the shared file', async ($, on) => {
 test('the shared file wins over the plugin store', async ($, on) => {
   setup(on, '{ "look": "off" }', 'cosmos')
 
-  expect((await $.command.run(run(''))).text).toContain('● 5. off')
+  expect((await $.command.run(run(''))).text).toContain('● 6. off')
 })
 
 test('an open chat follows a pick made in another chat', async ($, on) => {
