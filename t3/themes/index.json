@@ -10,6 +10,11 @@
       "id": "pixel-cats",
       "label": "Pixel cats",
       "description": "Pixel and Charlie in a sunny pixel room"
+    },
+    {
+      "id": "dark-fleet",
+      "label": "Dark fleet",
+      "description": "A dark warrior with a red blade, a wedge fleet and a red-rimmed planet"
     }
   ]
 }
