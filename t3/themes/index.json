@@ -1,0 +1,15 @@
+{
+  "default": "pixel-cats",
+  "looks": [
+    {
+      "id": "cosmos",
+      "label": "Cosmos",
+      "description": "Black hole, spiral galaxy and nebulae from the portfolio"
+    },
+    {
+      "id": "pixel-cats",
+      "label": "Pixel cats",
+      "description": "Pixel and Charlie in a sunny pixel room"
+    }
+  ]
+}

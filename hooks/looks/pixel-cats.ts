@@ -411,7 +411,7 @@ function seated(spec: CatSpec, name: string): string {
     rows--
   }
 
-  return `<ellipse cx="${(shadowU * s * PX).toFixed(1)}" cy="${-PX}" rx="${(27 * s * PX).toFixed(1)}" ry="${4 * PX}" fill="#d6b78e"/>
+  return `<ellipse cx="${(shadowU * s * PX).toFixed(1)}" cy="${-PX}" rx="${(27 * s * PX).toFixed(1)}" ry="${4 * PX}" fill="#e2ccaa"/>
 <g transform="translate(${(U0 * s * PX).toFixed(1)} ${(-rows * PX).toFixed(1)}) scale(${PX})">${drawCat(spec, name)}</g>`
 }
 
@@ -457,15 +457,17 @@ function room(): string {
   for (let x = 0; x < W; x += 54) {
     out += rect(x, 0, 27, FLOOR - 24, '#ede6db')
   }
-  out += rect(0, FLOOR - 24, W, 24, '#7d4a2b') + rect(0, FLOOR - 24, W, 4.5, '#9a6240')
-  out += rect(0, FLOOR, W, H - FLOOR, '#e2c8a2')
+  // Pale honey wood, light enough that the conversation's muted text stays at 4.5:1 or
+  // better over every color here once the frosted layer is over it.
+  out += rect(0, FLOOR - 24, W, 24, '#dcc5a3') + rect(0, FLOOR - 24, W, 4.5, '#e9d6b8')
+  out += rect(0, FLOOR, W, H - FLOOR, '#ecdcc2')
 
-  // Light wood: long grain streaks, plank seams, staggered joints.
+  // Long grain streaks, plank seams, staggered joints, all low in contrast.
   for (let row = 0, y = FLOOR; y < H; row++, y += 36) {
-    out += rect(0, y + 9, W, 4.5, '#ecd8b8') + rect(0, y + 22.5, W, 4.5, '#d6b88f') + rect(0, y + 31.5, W, 4.5, '#c9a67a')
+    out += rect(0, y + 9, W, 4.5, '#f3e8d6') + rect(0, y + 22.5, W, 4.5, '#e4d0b2') + rect(0, y + 31.5, W, 4.5, '#dcc5a3')
 
     for (let x = (row % 2) * 160 + 40; x < W; x += 320) {
-      out += rect(x, y, 4.5, 36, '#c9a67a')
+      out += rect(x, y, 4.5, 36, '#dcc5a3')
     }
   }
 
@@ -559,7 +561,7 @@ export const pixelCats: Look = {
   problems,
   theme: {
     colors: theme,
-    backdrop: { scene: 'pixel-cats', glass: { blur: 0, tint: '#f3ede4', opacity: 0.4 } },
+    backdrop: { scene: 'pixel-cats', glass: { blur: 0, tint: '#f3ede4', opacity: 0.45 } },
   },
   scenes: {
     'pixel-cats': {
