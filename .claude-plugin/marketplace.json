@@ -1,0 +1,5 @@
+{
+  "name": "local-looks",
+  "owner": { "name": "local" },
+  "plugins": [{ "name": "looks", "source": "./" }]
+}
