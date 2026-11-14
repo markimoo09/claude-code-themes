@@ -474,9 +474,6 @@ function room(): string {
   return out
 }
 
-// Sunlight from the window, falling across the floor; it follows Charlie sideways.
-const SUN = `<polygon points="0,${FLOOR} 300,${FLOOR} 260,${H} -100,${H}" fill="#f1dfbf" opacity="0.7"/>`
-
 // ---------- layout ----------
 //
 // The scene is cropped to the window's shape (slice), so what is visible depends on the
@@ -509,7 +506,6 @@ function place(a: number, tallestA: number): string {
     `.pixel { transform: translate(${f(pixelX)}px, ${f(feet)}px) scale(${s.toFixed(2)}); }`,
     `.charlie { transform: translate(${f(charlieX)}px, ${f(feet)}px) scale(${s.toFixed(2)}); }`,
     `.window { transform: translate(${f(windowX)}px, ${f(top + 90)}px) scale(${ws.toFixed(2)}); }`,
-    `.sun { transform: translateX(${f(charlieX - 110 * s)}px); }`,
   ].join(' ')
 }
 
@@ -547,7 +543,6 @@ ${LAYOUT}
 </style>
 <g class="room">
 ${room()}
-<g class="sun">${SUN}</g>
 <g class="window">${WINDOW}</g>
 <g class="pixel">${PIXEL_SVG}</g>
 <g class="charlie">${CHARLIE_SVG}</g>
