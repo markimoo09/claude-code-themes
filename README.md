@@ -29,6 +29,14 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 
 ![Pixel cats](preview-pixel-cats.png)
 
+## T3 Code
+
+`t3/` turns each look into a T3 Code theme. T3 themes are colors only, so the moving scenes stay in the Claude apps.
+
+- `node t3/build.mjs` writes `t3/themes/<id>.json` from `LOOKS`.
+- `node t3/look.mjs [name | number | next | off]` works like `/custom-theme`. It sets the pick as T3's environment theme (`t3 theme set`), so every T3 window switches, and new windows start with it. `off` sets T3 Chat, T3's own theme. Each switch rebuilds the files first.
+- `/t3-theme` (the skill in `~/.claude/skills/t3-theme`) runs it from a chat.
+
 ## Install
 
 At the prompt of a Claude Code terminal session:
