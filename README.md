@@ -20,7 +20,32 @@ The last theme you pick is saved, and every new session starts with it. Until yo
 
 Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filters and use `steps()` timing on slow animations.
 
+## Themes
+
+| # | Name | Look |
+| --- | --- | --- |
+| 1 | `cosmos` | Dark. A tilted black hole and a turning spiral galaxy over cyan, violet and ember nebulae. |
+| 2 | `pixel-cats` | Light. Pixel art of two fluffy cats, Pixel and Charlie, in a sunny room. |
+
+![Pixel cats](preview-pixel-cats.png)
+
 ## Install
+
+At the prompt of a Claude Code terminal session:
+
+```
+/plugin install looks --marketplace markimoo09/claude-code-themes
+```
+
+From a shell:
+
+```bash
+claude plugin install looks --marketplace markimoo09/claude-code-themes
+```
+
+In the desktop app, where `/plugin` does not run: click + next to the prompt box, then Plugins, Add marketplace with `markimoo09/claude-code-themes`, then Add plugin.
+
+### From a local copy
 
 ```bash
 claude plugin marketplace add ~/Documents/Code/claude-looks
@@ -30,4 +55,4 @@ claude plugin marketplace add ~/Documents/Code/claude-looks
 claude plugin install looks@local-looks
 ```
 
-The plugin is read from this folder, so edits here are what the app runs.
+A plugin installed from a local folder is read from that folder, so edits there are what the app runs after `/reload-plugins` or a new session.
