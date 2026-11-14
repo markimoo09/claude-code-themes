@@ -120,74 +120,120 @@ ${[-232, -222, -212].map(y => `<rect x="64" y="${y}" width="16" height="3" fill=
 
 // ---------- the battle station ----------
 
-// A moon-sized armored station, its dome rising behind the foot of the view: plated with
-// rings and seams, dotted with clusters of lit windows, a cool metallic rim and a faint red
-// reflection from the blade. Drawn from the group's origin at the bottom-right corner.
-const SC = [-200, 560] as const // centre
-const SR = 700 // radius
+// A moon-sized armored station, seen whole from slightly above, centred on (0, 0) with radius
+// 150: shaded as a sphere lit from the upper left, plated with latitude and longitude lines that
+// follow its curve, covered in small structure blocks, a bright belt of windows round its
+// equator, scattered window lights that glow warmer on the shadow side, and a metallic rim with
+// a red reflection from the blade.
+const SR = 150
+const TILT = 0.38 // sine of the viewer's height above the equator
+const LIFT = Math.sqrt(1 - TILT * TILT)
 
-function stationLights(): string {
-  let s = 23
+function stationSurface(): string {
+  let s = 29
   const rand = (): number => (s = (s * 16807) % 2147483647) / 2147483647
-  let out = ''
+  const inDisc = (): [number, number] => {
+    for (;;) {
+      const x = (rand() * 2 - 1) * SR
+      const y = (rand() * 2 - 1) * SR
 
-  // Clusters of windows along a few of the plating rings.
-  for (let c = 0; c < 44; c++) {
-    const ring = [668, 628, 582, 528, 468][Math.floor(rand() * 5)] ?? 600
-    const a0 = (-160 + rand() * 140) * (Math.PI / 180)
-
-    for (let k = 0; k < 4 + Math.floor(rand() * 7); k++) {
-      const a = a0 + (k - 3) * 0.006 + (rand() - 0.5) * 0.004
-      const r = ring + (rand() - 0.5) * 10
-      const x = SC[0] + Math.cos(a) * r
-      const y = SC[1] + Math.sin(a) * r
-      const warm = rand() < 0.75
-      const twinkle = c % 5 === 0 && k === 0 ? ' class="tw tw1"' : ''
-
-      out += `<circle${twinkle} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1 + rand() * 0.9).toFixed(2)}" fill="${warm ? '#ffd9a0' : '#cfe3ff'}" opacity="${(0.55 + rand() * 0.4).toFixed(2)}"/>`
+      if (x * x + y * y < (SR * 0.97) ** 2) {
+        return [x, y]
+      }
     }
   }
-
-  return out
-}
-
-function plating(): string {
   let out = ''
 
-  // Rings around the pole, seen from above it.
-  for (const r of [690, 668, 648, 628, 606, 582, 556, 528, 498, 468, 436]) {
-    out += `<circle cx="${SC[0]}" cy="${SC[1]}" r="${r}" fill="none" stroke="#1b1f29" stroke-width="${r % 2 === 0 ? 1.6 : 1.1}"/>`
-  }
-  // Seams running down from the rim toward the pole, staggered between rings.
-  for (let deg = -172; deg <= -8; deg += 4) {
-    const a = (deg * Math.PI) / 180
-    const [r1, r2] = Math.round(deg / 4) % 2 === 0 ? [606, 700] : [528, 648]
+  // Structure blocks, foreshortened toward the edge.
+  const shades = ['#5d6577', '#3f4555', '#717a8d', '#2e333f', '#4c5364']
 
-    out += `<line x1="${(SC[0] + Math.cos(a) * r1).toFixed(1)}" y1="${(SC[1] + Math.sin(a) * r1).toFixed(1)}" x2="${(SC[0] + Math.cos(a) * r2).toFixed(1)}" y2="${(SC[1] + Math.sin(a) * r2).toFixed(1)}" stroke="#1b1f29" stroke-width="1.1"/>`
-  }
-  // A few lighter plates catching the light.
-  for (const [deg, r] of [[-130, 640], [-112, 594], [-98, 650], [-140, 560], [-84, 600], [-121, 680]] as const) {
-    const a = (deg * Math.PI) / 180
+  for (let i = 0; i < 280; i++) {
+    const [x, y] = inDisc()
+    const squeeze = Math.sqrt(Math.max(0.15, 1 - (x / SR) ** 2))
+    const w = (3 + rand() * 7) * squeeze
+    const h = 2 + rand() * 3.5
 
-    out += `<path d="M${(SC[0] + Math.cos(a) * r).toFixed(1)} ${(SC[1] + Math.sin(a) * r).toFixed(1)} A ${r} ${r} 0 0 1 ${(SC[0] + Math.cos(a + 0.05) * r).toFixed(1)} ${(SC[1] + Math.sin(a + 0.05) * r).toFixed(1)}" fill="none" stroke="#454b5b" stroke-width="9" opacity="0.5"/>`
+    out += `<rect x="${(x - w / 2).toFixed(1)}" y="${(y - h / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" fill="${shades[Math.floor(rand() * shades.length)]}" opacity="${(0.45 + rand() * 0.45).toFixed(2)}"/>`
+  }
+
+  // Latitude lines: the near half of each circle of latitude, seen from above.
+  for (const deg of [-62, -44, -26, -12, 12, 26, 44, 62]) {
+    const lat = (deg * Math.PI) / 180
+    const cy = -SR * Math.sin(lat) * LIFT
+    const rx = SR * Math.cos(lat)
+    const ry = rx * TILT
+
+    out += `<path d="M${(-rx).toFixed(1)} ${cy.toFixed(1)} A ${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 0 ${rx.toFixed(1)} ${cy.toFixed(1)}" fill="none" stroke="#1c2029" stroke-width="1.4"/>`
+  }
+  // Longitude lines: half-ellipses from pole to pole.
+  for (const deg of [-70, -45, -20, 20, 45, 70]) {
+    const rx = Math.abs(SR * Math.sin((deg * Math.PI) / 180))
+    const ry = SR * LIFT
+
+    out += `<path d="M0 ${(-ry).toFixed(1)} A ${rx.toFixed(1)} ${ry.toFixed(1)} 0 0 ${deg < 0 ? 0 : 1} 0 ${ry.toFixed(1)}" fill="none" stroke="#1c2029" stroke-width="1.2"/>`
+  }
+  out += `<line x1="0" y1="${(-SR * LIFT).toFixed(1)}" x2="0" y2="${(SR * LIFT).toFixed(1)}" stroke="#1c2029" stroke-width="1.2"/>`
+
+  // The equator: a dark band with a bright belt of windows along it.
+  const ery = SR * TILT
+
+  out += `<path d="M${-SR} 0 A ${SR} ${ery.toFixed(1)} 0 0 0 ${SR} 0" fill="none" stroke="#181b23" stroke-width="7"/>`
+  for (let i = 0; i < 70; i++) {
+    const a = Math.PI * (0.03 + 0.94 * (i / 69)) + (rand() - 0.5) * 0.01
+    const x = -Math.cos(a) * SR
+    const y = Math.sin(a) * ery + (rand() - 0.5) * 3
+
+    out += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(0.9 + rand() * 0.7).toFixed(2)}" fill="${rand() < 0.8 ? '#ffe2ae' : '#d6e8ff'}" opacity="${(0.6 + rand() * 0.4).toFixed(2)}"/>`
+  }
+
+  // Scattered windows, warmer and brighter on the shadow side (lower right).
+  for (let i = 0; i < 230; i++) {
+    const [x, y] = inDisc()
+    const dark = (x + y) / (SR * 1.4) // -1 lit … 1 shadow
+    const twinkle = i % 23 === 0 ? ' class="tw tw0"' : ''
+
+    out += `<circle${twinkle} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(0.6 + rand() * 0.8).toFixed(2)}" fill="${dark > 0 ? '#ffd39a' : '#e6eefb'}" opacity="${Math.max(0.2, Math.min(0.95, 0.45 + dark * 0.45 + rand() * 0.15)).toFixed(2)}"/>`
   }
 
   return out
 }
 
-const PLANET = `
-<clipPath id="station-clip"><circle cx="${SC[0]}" cy="${SC[1]}" r="${SR}"/></clipPath>
-<circle cx="${SC[0]}" cy="${SC[1]}" r="${SR}" fill="url(#station)"/>
-<g clip-path="url(#station-clip)">${plating()}${stationLights()}</g>
-<circle cx="${SC[0]}" cy="${SC[1]}" r="${SR + 6}" fill="none" stroke="#8fa6c8" stroke-width="10" opacity="0.12"/>
-<circle cx="${SC[0]}" cy="${SC[1]}" r="${SR}" fill="none" stroke="url(#station-rim)" stroke-width="2.5"/>`
+const STATION = `
+<defs>
+  <radialGradient id="st-body" cx="34%" cy="28%" r="78%">
+    <stop offset="0" stop-color="#7a8497"/>
+    <stop offset="0.4" stop-color="#4d5466"/>
+    <stop offset="0.78" stop-color="#262b36"/>
+    <stop offset="1" stop-color="#13161d"/>
+  </radialGradient>
+  <linearGradient id="st-shade" x1="0.15" y1="0.1" x2="0.95" y2="0.95">
+    <stop offset="0.45" stop-color="#05060a" stop-opacity="0"/>
+    <stop offset="0.8" stop-color="#05060a" stop-opacity="0.5"/>
+    <stop offset="1" stop-color="#05060a" stop-opacity="0.75"/>
+  </linearGradient>
+  <linearGradient id="st-rim" x1="0" y1="0.2" x2="1" y2="0.8">
+    <stop offset="0" stop-color="#ff5a5a" stop-opacity="0.85"/>
+    <stop offset="0.3" stop-color="#d9e3f2"/>
+    <stop offset="0.6" stop-color="#9fb4d6" stop-opacity="0.5"/>
+    <stop offset="1" stop-color="#6f86ab" stop-opacity="0.15"/>
+  </linearGradient>
+  <radialGradient id="st-halo" cx="50%" cy="50%" r="50%">
+    <stop offset="0.6" stop-color="#9fb4d6" stop-opacity="0.12"/>
+    <stop offset="1" stop-color="#9fb4d6" stop-opacity="0"/>
+  </radialGradient>
+  <clipPath id="st-clip"><circle r="${SR}"/></clipPath>
+</defs>
+<circle r="${SR * 1.25}" fill="url(#st-halo)"/>
+<circle r="${SR}" fill="url(#st-body)"/>
+<g clip-path="url(#st-clip)">${stationSurface()}<circle r="${SR}" fill="url(#st-shade)"/></g>
+<circle r="${SR}" fill="none" stroke="url(#st-rim)" stroke-width="2.2"/>`
 
 // ---------- layout ----------
 //
 // The scene is cropped to the window's shape (slice). For each band of aspect ratios this
 // places, for the narrowest shape in it: the warrior in the gap between the app's sidebar
 // (about the left 17%) and the conversation's text (from about 35%), the fleet in the
-// top-right corner and the planet in the bottom-right corner. Phones have no sidebar.
+// top-right corner and the station below it on the right. Phones have no sidebar.
 
 const WARRIOR_SCALE = 0.75
 const WARRIOR_HALF = 150 * WARRIOR_SCALE
@@ -207,7 +253,8 @@ function place(a: number, tallestA: number): string {
   return [
     `.warrior { transform: translate(${f(warriorX)}px, ${f(feet)}px) scale(${(s * WARRIOR_SCALE).toFixed(3)}); }`,
     `.fleet { transform: translate(${f(right - v * 0.02)}px, ${f(top + 30)}px) scale(${s.toFixed(2)}); }`,
-    `.planet { transform: translate(${f(right)}px, ${f(bottom)}px) scale(${s.toFixed(2)}); }`,
+    // The station sits below the fleet (whose lowest escort ends near top + 30 + 345 s).
+    `.station { transform: translate(${f(right - v * 0.03 - SR * 0.95 * s)}px, ${f(Math.max(bottom - 330 * s, top + 30 + 345 * s + SR * 0.95 * s))}px) scale(${(0.95 * s).toFixed(3)}); }`,
   ].join(' ')
 }
 
@@ -250,17 +297,6 @@ const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" p
     <stop offset="0.5" stop-color="#ff7a7a" stop-opacity="0.8"/>
     <stop offset="1" stop-color="#ff4a4a" stop-opacity="0"/>
   </linearGradient>
-  <radialGradient id="station" cx="38%" cy="22%" r="80%">
-    <stop offset="0" stop-color="#373c4b"/>
-    <stop offset="0.45" stop-color="#252a35"/>
-    <stop offset="1" stop-color="#12151d"/>
-  </radialGradient>
-  <linearGradient id="station-rim" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#ff5a5a" stop-opacity="0.7"/>
-    <stop offset="0.25" stop-color="#b9c8de"/>
-    <stop offset="0.6" stop-color="#9fb4d6"/>
-    <stop offset="1" stop-color="#6f86ab" stop-opacity="0.6"/>
-  </linearGradient>
 </defs>
 <style>
 ${LAYOUT}
@@ -284,7 +320,7 @@ ${LAYOUT}
 <ellipse cx="360" cy="640" rx="560" ry="420" fill="url(#neb-red)"/>
 <ellipse cx="1260" cy="260" rx="620" ry="380" fill="url(#neb-blue)"/>
 ${stars()}
-<g class="planet">${PLANET}</g>
+<g class="station">${STATION}</g>
 <g class="fleet">${FLEET}</g>
 <g class="warrior">${WARRIOR}</g>
 </svg>`
