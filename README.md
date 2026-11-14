@@ -27,10 +27,23 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 | 1 | `cosmos` | Dark. A tilted black hole and a turning spiral galaxy over cyan, violet and ember nebulae. |
 | 2 | `pixel-cats` | Light. Pixel art of two fluffy cats, Pixel and Charlie, in a sunny room. |
 | 3 | `dark-fleet` | Dark and cinematic. A hooded warrior with a red energy blade, a wedge-shaped fleet and a moon-sized battle station. |
+| 4 | `neon-tokyo` | Dark. Pixel-art Tokyo at night: the Skytree across a full moon, Mt Fuji, the lit Tokyo Tower, neon katakana signs, the tail of a departing train, a scramble crossing, a cherry tree with red lanterns, and a cat on a vending machine. |
+
+### Cosmos
+
+![Cosmos](preview-cosmos.png)
+
+### Pixel cats
 
 ![Pixel cats](preview-pixel-cats.png)
 
+### Dark fleet
+
 ![Dark fleet](preview-dark-fleet.png)
+
+### Neon Tokyo
+
+![Neon Tokyo](preview-neon-tokyo.png)
 
 ## T3 Code
 

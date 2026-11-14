@@ -15,6 +15,11 @@
       "id": "dark-fleet",
       "label": "Dark fleet",
       "description": "A dark warrior with a red blade, a wedge fleet and a battle station"
+    },
+    {
+      "id": "neon-tokyo",
+      "label": "Neon Tokyo",
+      "description": "Pixel-art Tokyo at night: Skytree, Tokyo Tower, neon signs and sakura"
     }
   ]
 }
