@@ -10,7 +10,7 @@ Switchable looks for the Claude desktop and mobile apps. A look is a color theme
 - `/custom-theme off` returns to the app's own theme.
 - `/look` is a short form of `/custom-theme` and takes the same words.
 
-The last theme you pick is saved, and every new session starts with it. Until you pick one, Pixel cats is used.
+The last theme you pick is saved in `~/.claude/looks-choice.json`. Every chat follows it: new chats start with it, and open chats switch within a few seconds. Until you pick one, Pixel cats is used.
 
 ## Add a look
 
