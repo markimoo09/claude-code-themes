@@ -5,16 +5,17 @@ import { makeColors } from '../make-colors.js'
 // A cinematic space-opera scene, original designs throughout: a hooded dark warrior holding
 // an upright red energy blade in the lower left, a fleet of wedge-shaped warships with blue
 // engines in the upper right, and the red-rimmed curve of a dark planet in the lower right.
-// The blade's red is the theme's accent.
+// The accent is the engines' cool blue, so progress and usage indicators (which draw in the
+// accent) never read as a red warning; red stays the blade's and means danger in the app.
 const { theme, problems } = makeColors({
   label: 'Dark fleet',
   only: 'dark',
   roles: {
-    accent: '#e5383b',
-    danger: '#ff6a3d',
+    accent: '#6ea8ff',
+    danger: '#ef4444',
     success: '#3fbf8f',
     warning: '#f0b429',
-    pro: '#8aa4ff',
+    pro: '#b48cff',
   },
   dark: {
     gray: {
