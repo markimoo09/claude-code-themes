@@ -58,8 +58,8 @@ function stars(): string {
 // wide at the stern: a lit upper facet and a shaded lower one meeting on a centre ridge, panel
 // lines, a stepped command block near the stern, running lights and three blue engines.
 const SHIP = `
-<polygon points="0,0 360,-85 360,0" fill="#2f394b"/>
-<polygon points="0,0 360,0 360,55" fill="#151b27"/>
+<polygon points="0,0 360,-85 360,0" fill="#3b475d"/>
+<polygon points="0,0 360,0 360,55" fill="#1e2534"/>
 ${[80, 150, 220, 290].map(x => `<line x1="${x}" y1="${((-85 * x) / 360).toFixed(1)}" x2="${x}" y2="0" stroke="#262e3d" stroke-width="1.4"/>`).join('')}
 ${[100, 190, 280].map(x => `<line x1="${x}" y1="0" x2="${x}" y2="${((55 * x) / 360).toFixed(1)}" stroke="#10151e" stroke-width="1.2"/>`).join('')}
 <polyline points="40,-5 360,-45" fill="none" stroke="#3a4558" stroke-width="1.2"/>
@@ -92,24 +92,25 @@ const FLEET = `
 // A hooded, cloaked figure, feet centred on (0, 0), about 420 tall, holding an upright blade
 // at his right side. The blade's red lights the cloak's edge and the ground.
 const WARRIOR = `
-<ellipse cx="40" cy="0" rx="210" ry="26" fill="url(#floor-glow)" class="flicker"/>
-<ellipse cx="72" cy="-390" rx="130" ry="230" fill="url(#blade-halo)" class="flicker"/>
-<path d="M0,-420 C28,-420 46,-398 50,-370 C54,-350 50,-336 46,-326 C70,-322 92,-308 100,-284 C108,-240 112,-180 118,-120 C124,-60 136,-20 150,0 L-150,0 C-136,-20 -124,-60 -118,-120 C-112,-180 -108,-240 -100,-284 C-92,-308 -70,-322 -46,-326 C-50,-336 -54,-350 -50,-370 C-46,-398 -28,-420 0,-420 Z" fill="#090a0f"/>
-<path d="M-30,-300 C-10,-250 -18,-150 -40,-10 L-60,-10 C-40,-140 -34,-240 -46,-296 Z" fill="#0f1118"/>
-<path d="M30,-300 C14,-250 22,-150 46,-10 L62,-10 C42,-140 40,-240 48,-296 Z" fill="#0f1118"/>
+<ellipse cx="40" cy="0" rx="250" ry="34" fill="url(#floor-glow)" class="flicker"/>
+<ellipse cx="72" cy="-390" rx="180" ry="290" fill="url(#blade-halo)" class="flicker"/>
+<path d="M0,-420 C28,-420 46,-398 50,-370 C54,-350 50,-336 46,-326 C70,-322 92,-308 100,-284 C108,-240 112,-180 118,-120 C124,-60 136,-20 150,0 L-150,0 C-136,-20 -124,-60 -118,-120 C-112,-180 -108,-240 -100,-284 C-92,-308 -70,-322 -46,-326 C-50,-336 -54,-350 -50,-370 C-46,-398 -28,-420 0,-420 Z" fill="#11131a"/>
+<path d="M-30,-300 C-10,-250 -18,-150 -40,-10 L-60,-10 C-40,-140 -34,-240 -46,-296 Z" fill="#181b24"/>
+<path d="M30,-300 C14,-250 22,-150 46,-10 L62,-10 C42,-140 40,-240 48,-296 Z" fill="#181b24"/>
 <ellipse cx="0" cy="-368" rx="23" ry="31" fill="#000000"/>
 <path d="M-10,-372 L-4,-369 M10,-372 L4,-369" stroke="#ff4040" stroke-width="2" opacity="0.55"/>
-<path d="M46,-326 C70,-322 92,-308 100,-284 C108,-240 112,-180 118,-120 C124,-60 136,-20 150,0" fill="none" stroke="#d63434" stroke-width="3" opacity="0.6" class="flicker"/>
-<path d="M50,-370 C54,-350 50,-336 46,-326" fill="none" stroke="#d63434" stroke-width="2.5" opacity="0.5" class="flicker"/>
+<path d="M46,-326 C70,-322 92,-308 100,-284 C108,-240 112,-180 118,-120 C124,-60 136,-20 150,0" fill="none" stroke="#ff4040" stroke-width="3.5" opacity="0.8" class="flicker"/>
+<path d="M50,-370 C54,-350 50,-336 46,-326" fill="none" stroke="#ff4040" stroke-width="3" opacity="0.7" class="flicker"/>
 <path d="M-46,-326 C-70,-322 -92,-308 -100,-284 C-108,-240 -112,-180 -118,-120" fill="none" stroke="#4a6a9a" stroke-width="2" opacity="0.35"/>
 <path d="M92,-300 C112,-270 102,-232 80,-208 L60,-220 C76,-244 80,-268 70,-292 Z" fill="#14161e"/>
 <g class="flicker">
-  <rect x="49" y="-540" width="46" height="304" rx="23" fill="#ff2626" opacity="0.1"/>
-  <rect x="60" y="-540" width="24" height="304" rx="12" fill="#ff2a2a" opacity="0.24"/>
-  <rect x="-90" y="-471" width="324" height="2" fill="url(#flare)"/>
+  <rect x="37" y="-548" width="70" height="320" rx="35" fill="#ff2626" opacity="0.14"/>
+  <rect x="52" y="-544" width="40" height="312" rx="20" fill="#ff2a2a" opacity="0.28"/>
+  <rect x="62" y="-542" width="20" height="306" rx="10" fill="#ff3838" opacity="0.55"/>
+  <rect x="-110" y="-472" width="364" height="3" fill="url(#flare)"/>
 </g>
-<rect x="66.5" y="-540" width="11" height="302" rx="5.5" fill="#ff3434"/>
-<rect x="69.75" y="-538" width="4.5" height="298" rx="2.25" fill="#fff1f1"/>
+<rect x="65.5" y="-540" width="13" height="302" rx="6.5" fill="#ff4a4a"/>
+<rect x="69" y="-538" width="6" height="298" rx="3" fill="#fff6f6"/>
 <rect x="64" y="-240" width="16" height="44" rx="2" fill="#9aa1ad"/>
 ${[-232, -222, -212].map(y => `<rect x="64" y="${y}" width="16" height="3" fill="#3a3f48"/>`).join('')}
 <rect x="62" y="-242" width="20" height="5" rx="1.5" fill="#c7ccd5"/>
@@ -163,16 +164,16 @@ const LAYOUT = [
 const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">
 <defs>
   <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#0b1120"/>
-    <stop offset="0.6" stop-color="#0d1222"/>
-    <stop offset="1" stop-color="#16111c"/>
+    <stop offset="0" stop-color="#141c33"/>
+    <stop offset="0.6" stop-color="#151d35"/>
+    <stop offset="1" stop-color="#221828"/>
   </linearGradient>
   <radialGradient id="neb-red" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#8a1820" stop-opacity="0.42"/>
+    <stop offset="0" stop-color="#a8202a" stop-opacity="0.5"/>
     <stop offset="1" stop-color="#6a1018" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="neb-blue" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#2a4282" stop-opacity="0.55"/>
+    <stop offset="0" stop-color="#33509a" stop-opacity="0.56"/>
     <stop offset="1" stop-color="#1c2c5c" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="engine-glow" cx="50%" cy="50%" r="50%">
@@ -180,23 +181,23 @@ const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" p
     <stop offset="1" stop-color="#7fc8ff" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="blade-halo" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#ff2a2a" stop-opacity="0.26"/>
-    <stop offset="0.5" stop-color="#c41414" stop-opacity="0.08"/>
+    <stop offset="0" stop-color="#ff2a2a" stop-opacity="0.4"/>
+    <stop offset="0.5" stop-color="#d41818" stop-opacity="0.14"/>
     <stop offset="1" stop-color="#c41414" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="floor-glow" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#ff3030" stop-opacity="0.4"/>
+    <stop offset="0" stop-color="#ff3030" stop-opacity="0.6"/>
     <stop offset="1" stop-color="#ff3030" stop-opacity="0"/>
   </radialGradient>
   <linearGradient id="flare" x1="0" y1="0" x2="1" y2="0">
     <stop offset="0" stop-color="#ff4a4a" stop-opacity="0"/>
-    <stop offset="0.5" stop-color="#ff6a6a" stop-opacity="0.55"/>
+    <stop offset="0.5" stop-color="#ff7a7a" stop-opacity="0.8"/>
     <stop offset="1" stop-color="#ff4a4a" stop-opacity="0"/>
   </linearGradient>
   <radialGradient id="planet" cx="35%" cy="30%" r="75%">
-    <stop offset="0" stop-color="#2c2f3e"/>
-    <stop offset="0.5" stop-color="#181b26"/>
-    <stop offset="1" stop-color="#0c0e15"/>
+    <stop offset="0" stop-color="#363a4c"/>
+    <stop offset="0.5" stop-color="#20242f"/>
+    <stop offset="1" stop-color="#12151e"/>
   </radialGradient>
   <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#ffb07a"/>
@@ -209,7 +210,7 @@ ${LAYOUT}
 
   /* Every animation steps: the scene redraws only when a frame changes. */
   .flicker { animation: flicker 2.4s steps(1) infinite; }
-  @keyframes flicker { 0% { opacity: 1; } 30% { opacity: 0.82; } 45% { opacity: 1; } 80% { opacity: 0.9; } }
+  @keyframes flicker { 0% { opacity: 1; } 30% { opacity: 0.88; } 45% { opacity: 1; } 80% { opacity: 0.94; } }
   .engines { animation: engines 3s steps(1) infinite; }
   @keyframes engines { 0% { opacity: 1; } 50% { opacity: 0.8; } }
   .fleet-drift { animation: drift 160s steps(160) infinite alternate; }
@@ -238,7 +239,7 @@ export const darkFleet: Look = {
   problems,
   theme: {
     colors: theme,
-    backdrop: { scene: 'dark-fleet', glass: { blur: 0, tint: '#05070a', opacity: 0.3 } },
+    backdrop: { scene: 'dark-fleet', glass: { blur: 0, tint: '#05070a', opacity: 0.25 } },
   },
   scenes: {
     'dark-fleet': {
