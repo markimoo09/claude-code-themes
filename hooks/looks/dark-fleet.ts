@@ -4,7 +4,8 @@ import { makeColors } from '../make-colors.js'
 
 // A cinematic space-opera scene, original designs throughout: a hooded dark warrior holding
 // an upright red energy blade in the lower left, a fleet of wedge-shaped warships with blue
-// engines in the upper right, and the red-rimmed curve of a dark planet in the lower right.
+// engines in the upper right, and the plated dome of a moon-sized battle station rising in the
+// lower right.
 // The accent is the engines' cool blue, so progress and usage indicators (which draw in the
 // accent) never read as a red warning; red stays the blade's and means danger in the app.
 const { theme, problems } = makeColors({
@@ -117,15 +118,69 @@ ${[-232, -222, -212].map(y => `<rect x="64" y="${y}" width="16" height="3" fill=
 <rect x="62" y="-242" width="20" height="5" rx="1.5" fill="#c7ccd5"/>
 <path d="M72,-214 C66,-210 60,-206 58,-200 L76,-196 Z" fill="#14161e"/>`
 
-// ---------- the planet ----------
+// ---------- the battle station ----------
 
-// A dark planet seen from orbit, its rim lit red-orange, drawn from the group's origin at the
-// bottom-right corner of the view.
+// A moon-sized armored station, its dome rising behind the foot of the view: plated with
+// rings and seams, dotted with clusters of lit windows, a cool metallic rim and a faint red
+// reflection from the blade. Drawn from the group's origin at the bottom-right corner.
+const SC = [-200, 560] as const // centre
+const SR = 700 // radius
+
+function stationLights(): string {
+  let s = 23
+  const rand = (): number => (s = (s * 16807) % 2147483647) / 2147483647
+  let out = ''
+
+  // Clusters of windows along a few of the plating rings.
+  for (let c = 0; c < 44; c++) {
+    const ring = [668, 628, 582, 528, 468][Math.floor(rand() * 5)] ?? 600
+    const a0 = (-160 + rand() * 140) * (Math.PI / 180)
+
+    for (let k = 0; k < 4 + Math.floor(rand() * 7); k++) {
+      const a = a0 + (k - 3) * 0.006 + (rand() - 0.5) * 0.004
+      const r = ring + (rand() - 0.5) * 10
+      const x = SC[0] + Math.cos(a) * r
+      const y = SC[1] + Math.sin(a) * r
+      const warm = rand() < 0.75
+      const twinkle = c % 5 === 0 && k === 0 ? ' class="tw tw1"' : ''
+
+      out += `<circle${twinkle} cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(1 + rand() * 0.9).toFixed(2)}" fill="${warm ? '#ffd9a0' : '#cfe3ff'}" opacity="${(0.55 + rand() * 0.4).toFixed(2)}"/>`
+    }
+  }
+
+  return out
+}
+
+function plating(): string {
+  let out = ''
+
+  // Rings around the pole, seen from above it.
+  for (const r of [690, 668, 648, 628, 606, 582, 556, 528, 498, 468, 436]) {
+    out += `<circle cx="${SC[0]}" cy="${SC[1]}" r="${r}" fill="none" stroke="#1b1f29" stroke-width="${r % 2 === 0 ? 1.6 : 1.1}"/>`
+  }
+  // Seams running down from the rim toward the pole, staggered between rings.
+  for (let deg = -172; deg <= -8; deg += 4) {
+    const a = (deg * Math.PI) / 180
+    const [r1, r2] = Math.round(deg / 4) % 2 === 0 ? [606, 700] : [528, 648]
+
+    out += `<line x1="${(SC[0] + Math.cos(a) * r1).toFixed(1)}" y1="${(SC[1] + Math.sin(a) * r1).toFixed(1)}" x2="${(SC[0] + Math.cos(a) * r2).toFixed(1)}" y2="${(SC[1] + Math.sin(a) * r2).toFixed(1)}" stroke="#1b1f29" stroke-width="1.1"/>`
+  }
+  // A few lighter plates catching the light.
+  for (const [deg, r] of [[-130, 640], [-112, 594], [-98, 650], [-140, 560], [-84, 600], [-121, 680]] as const) {
+    const a = (deg * Math.PI) / 180
+
+    out += `<path d="M${(SC[0] + Math.cos(a) * r).toFixed(1)} ${(SC[1] + Math.sin(a) * r).toFixed(1)} A ${r} ${r} 0 0 1 ${(SC[0] + Math.cos(a + 0.05) * r).toFixed(1)} ${(SC[1] + Math.sin(a + 0.05) * r).toFixed(1)}" fill="none" stroke="#454b5b" stroke-width="9" opacity="0.5"/>`
+  }
+
+  return out
+}
+
 const PLANET = `
-<circle cx="-200" cy="560" r="712" fill="none" stroke="url(#rim)" stroke-width="30" opacity="0.2"/>
-<circle cx="-200" cy="560" r="705" fill="none" stroke="url(#rim)" stroke-width="12" opacity="0.42"/>
-<circle cx="-200" cy="560" r="700" fill="url(#planet)"/>
-<circle cx="-200" cy="560" r="700" fill="none" stroke="url(#rim)" stroke-width="2.5"/>`
+<clipPath id="station-clip"><circle cx="${SC[0]}" cy="${SC[1]}" r="${SR}"/></clipPath>
+<circle cx="${SC[0]}" cy="${SC[1]}" r="${SR}" fill="url(#station)"/>
+<g clip-path="url(#station-clip)">${plating()}${stationLights()}</g>
+<circle cx="${SC[0]}" cy="${SC[1]}" r="${SR + 6}" fill="none" stroke="#8fa6c8" stroke-width="10" opacity="0.12"/>
+<circle cx="${SC[0]}" cy="${SC[1]}" r="${SR}" fill="none" stroke="url(#station-rim)" stroke-width="2.5"/>`
 
 // ---------- layout ----------
 //
@@ -195,15 +250,16 @@ const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" p
     <stop offset="0.5" stop-color="#ff7a7a" stop-opacity="0.8"/>
     <stop offset="1" stop-color="#ff4a4a" stop-opacity="0"/>
   </linearGradient>
-  <radialGradient id="planet" cx="35%" cy="30%" r="75%">
-    <stop offset="0" stop-color="#363a4c"/>
-    <stop offset="0.5" stop-color="#20242f"/>
-    <stop offset="1" stop-color="#12151e"/>
+  <radialGradient id="station" cx="38%" cy="22%" r="80%">
+    <stop offset="0" stop-color="#373c4b"/>
+    <stop offset="0.45" stop-color="#252a35"/>
+    <stop offset="1" stop-color="#12151d"/>
   </radialGradient>
-  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#ffb07a"/>
-    <stop offset="0.3" stop-color="#ff5a36" stop-opacity="0.85"/>
-    <stop offset="0.55" stop-color="#ff5a36" stop-opacity="0"/>
+  <linearGradient id="station-rim" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#ff5a5a" stop-opacity="0.7"/>
+    <stop offset="0.25" stop-color="#b9c8de"/>
+    <stop offset="0.6" stop-color="#9fb4d6"/>
+    <stop offset="1" stop-color="#6f86ab" stop-opacity="0.6"/>
   </linearGradient>
 </defs>
 <style>
@@ -236,7 +292,7 @@ ${stars()}
 export const darkFleet: Look = {
   id: 'dark-fleet',
   label: 'Dark fleet',
-  description: 'A dark warrior with a red blade, a wedge fleet and a red-rimmed planet',
+  description: 'A dark warrior with a red blade, a wedge fleet and a battle station',
   problems,
   theme: {
     colors: theme,
@@ -245,7 +301,7 @@ export const darkFleet: Look = {
   scenes: {
     'dark-fleet': {
       source: SCENE,
-      alt: 'A hooded warrior holding an upright red energy blade, a fleet of wedge-shaped warships with blue engines, and the red-rimmed edge of a dark planet among stars',
+      alt: 'A hooded warrior holding an upright red energy blade, a fleet of wedge-shaped warships with blue engines, and the plated dome of a moon-sized battle station among stars',
     },
   },
 }
