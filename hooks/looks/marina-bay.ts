@@ -686,8 +686,10 @@ ${LAYOUT}
   .cap2 { animation-delay: -0.6s; }
   @keyframes cap { 0% { opacity: 1; } 33% { opacity: 0.25; } }
 
-  /* The laser show: three sets of beams in turn for six seconds, then dark for six. */
-  .laser { opacity: 0; animation: laser 12s step-end infinite; }
+  /* The laser show: three sets of beams in turn for six seconds, then dark for six. Where
+     nothing animates (a still frame), the first set and the fireworks' rings stay lit. */
+  .laser { animation: laser 12s step-end infinite; }
+  .laser1, .laser2 { opacity: 0; }
   .laser1 { animation-delay: -11s; }
   .laser2 { animation-delay: -10s; }
   @keyframes laser { 0% { opacity: 1; } 8.33% { opacity: 0; } 25% { opacity: 1; } 33.33% { opacity: 0; } }
@@ -707,7 +709,8 @@ ${LAYOUT}
   @keyframes bob { 0% { transform: translateY(0); } 50% { transform: translateY(1px); } }
 
   /* Fireworks: each burst pops, rings out and falls in its own slot of a long cycle. */
-  .fw { opacity: 0; animation: 11s step-end infinite; }
+  .fw { animation: 11s step-end infinite; }
+  .fw-f0, .fw-f2 { opacity: 0; }
   .fw-f0 { animation-name: fw0; }
   .fw-f1 { animation-name: fw1; }
   .fw-f2 { animation-name: fw2; }
