@@ -41,12 +41,12 @@ function stars(): string {
   const rand = (): number => (s = (s * 16807) % 2147483647) / 2147483647
   let out = ''
 
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < 380; i++) {
     const m = rand() ** 6 // few bright stars, many faint ones
     const fill = rand() < 0.2 ? '#bcd4ff' : '#eef2f8'
     const twinkle = m > 0.35 && i % 3 === 0 ? ` class="tw tw${i % 2}"` : ''
 
-    out += `<circle${twinkle} cx="${(rand() * W).toFixed(0)}" cy="${(rand() * H).toFixed(0)}" r="${(0.5 + m * 1.6).toFixed(2)}" fill="${fill}" opacity="${(0.3 + m * 0.7).toFixed(2)}"/>`
+    out += `<circle${twinkle} cx="${(rand() * W).toFixed(0)}" cy="${(rand() * H).toFixed(0)}" r="${(0.5 + m * 1.6).toFixed(2)}" fill="${fill}" opacity="${(0.45 + m * 0.55).toFixed(2)}"/>`
   }
 
   return out
@@ -120,8 +120,8 @@ ${[-232, -222, -212].map(y => `<rect x="64" y="${y}" width="16" height="3" fill=
 // A dark planet seen from orbit, its rim lit red-orange, drawn from the group's origin at the
 // bottom-right corner of the view.
 const PLANET = `
-<circle cx="-200" cy="560" r="712" fill="none" stroke="url(#rim)" stroke-width="26" opacity="0.14"/>
-<circle cx="-200" cy="560" r="705" fill="none" stroke="url(#rim)" stroke-width="10" opacity="0.32"/>
+<circle cx="-200" cy="560" r="712" fill="none" stroke="url(#rim)" stroke-width="30" opacity="0.2"/>
+<circle cx="-200" cy="560" r="705" fill="none" stroke="url(#rim)" stroke-width="12" opacity="0.42"/>
 <circle cx="-200" cy="560" r="700" fill="url(#planet)"/>
 <circle cx="-200" cy="560" r="700" fill="none" stroke="url(#rim)" stroke-width="2.5"/>`
 
@@ -143,7 +143,7 @@ function place(a: number, tallestA: number): string {
   const top = (H - shown) / 2
   const bottom = top + shown
   const s = Math.min(1, Math.max(0.55, 0.45 + (v / W) * 0.55))
-  const feet = Math.min(862, bottom - 22)
+  const feet = Math.min(898, bottom - 10)
   const warriorX = a >= 0.8 ? left + v * 0.19 + WARRIOR_HALF * s : left + v * 0.05 + WARRIOR_HALF * s
   const f = (n: number): string => n.toFixed(0)
 
@@ -163,16 +163,16 @@ const LAYOUT = [
 const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">
 <defs>
   <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#05070c"/>
-    <stop offset="0.6" stop-color="#070910"/>
-    <stop offset="1" stop-color="#0b0a10"/>
+    <stop offset="0" stop-color="#0b1120"/>
+    <stop offset="0.6" stop-color="#0d1222"/>
+    <stop offset="1" stop-color="#16111c"/>
   </linearGradient>
   <radialGradient id="neb-red" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#6a1018" stop-opacity="0.32"/>
+    <stop offset="0" stop-color="#8a1820" stop-opacity="0.42"/>
     <stop offset="1" stop-color="#6a1018" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="neb-blue" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#1c2c5c" stop-opacity="0.45"/>
+    <stop offset="0" stop-color="#2a4282" stop-opacity="0.55"/>
     <stop offset="1" stop-color="#1c2c5c" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="engine-glow" cx="50%" cy="50%" r="50%">
@@ -194,9 +194,9 @@ const SCENE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" p
     <stop offset="1" stop-color="#ff4a4a" stop-opacity="0"/>
   </linearGradient>
   <radialGradient id="planet" cx="35%" cy="30%" r="75%">
-    <stop offset="0" stop-color="#1a1c26"/>
-    <stop offset="0.5" stop-color="#0d0f16"/>
-    <stop offset="1" stop-color="#06070b"/>
+    <stop offset="0" stop-color="#2c2f3e"/>
+    <stop offset="0.5" stop-color="#181b26"/>
+    <stop offset="1" stop-color="#0c0e15"/>
   </radialGradient>
   <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
     <stop offset="0" stop-color="#ffb07a"/>
@@ -238,7 +238,7 @@ export const darkFleet: Look = {
   problems,
   theme: {
     colors: theme,
-    backdrop: { scene: 'dark-fleet', glass: { blur: 0, tint: '#05070a', opacity: 0.35 } },
+    backdrop: { scene: 'dark-fleet', glass: { blur: 0, tint: '#05070a', opacity: 0.3 } },
   },
   scenes: {
     'dark-fleet': {
