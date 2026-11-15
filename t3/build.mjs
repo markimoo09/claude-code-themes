@@ -1,30 +1,18 @@
-// Turns every look in hooks/looks into a T3 Code theme file in t3/themes/<id>.json.
-// T3 themes are colors only: the moving backdrop scenes stay in the Claude apps.
+// Turns every look in hooks/looks into a T3 Code theme file in t3/themes/<id>.json: its colors,
+// and its moving scene painted behind the chat through the theme's CSS.
 //
 //   node t3/build.mjs
 //
 // Reads the same LOOKS list /custom-theme uses, so a new look only needs to be added there.
-import { registerHooks } from 'node:module'
+// T3 caps theme CSS at 50,000 characters, so a scene too big for that needs a lighter T3
+// version in t3/scenes/<id>.mjs (see lib.mjs); until it has one, its theme is colors only.
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { join } from 'node:path'
 
-// The looks import each other without extensions; let Node find the .ts files.
-registerHooks({
-  resolve(specifier, context, next) {
-    if (specifier.startsWith('.') && !/\.[cm]?[jt]s$/.test(specifier) && context.parentURL?.endsWith('.ts')) {
-      try {
-        return next(`${specifier}.ts`, context)
-      } catch {
-        // Not a .ts file: resolve it as written.
-      }
-    }
-    return next(specifier, context)
-  },
-})
+import { CSS_LIMIT, SCENE_BUDGET, T3_DIR, backdropCss, loadLooks, t3SceneOf } from './lib.mjs'
 
-const here = dirname(fileURLToPath(import.meta.url))
-const { LOOKS, DEFAULT_LOOK } = await import(pathToFileURL(join(here, '../hooks/looks/index.ts')).href)
+const here = T3_DIR
+const { LOOKS, DEFAULT_LOOK } = await loadLooks()
 
 // ---------- color helpers ----------
 
@@ -148,10 +136,28 @@ mkdirSync(out, { recursive: true })
 for (const file of readdirSync(out)) if (file.endsWith('.json')) rmSync(join(out, file))
 
 const order = []
+const notes = []
 for (const look of LOOKS) {
-  writeFileSync(join(out, `${look.id}.json`), `${JSON.stringify(toT3(look), null, 2)}\n`)
-  order.push({ id: look.id, label: look.label, description: look.description })
+  const theme = toT3(look)
+  let scene
+  try {
+    scene = await t3SceneOf(look)
+  } catch (error) {
+    notes.push(`${look.id}: t3/scenes/${look.id}.mjs failed (${error instanceof Error ? error.message : error}); colors only`)
+  }
+  if (scene === undefined) {
+    if (!notes.some(n => n.startsWith(`${look.id}:`))) notes.push(`${look.id}: no scene, colors only`)
+  } else if (scene.length > SCENE_BUDGET) {
+    notes.push(`${look.id}: scene is ${scene.length} of ${SCENE_BUDGET} characters; colors only until t3/scenes/${look.id}.mjs makes it fit`)
+  } else {
+    const css = backdropCss(look, scene.svg, theme.colors.canvas)
+    if (css.length > CSS_LIMIT) notes.push(`${look.id}: CSS is ${css.length} of ${CSS_LIMIT} characters; colors only`)
+    else theme.css = css
+  }
+  writeFileSync(join(out, `${look.id}.json`), `${JSON.stringify(theme, null, 2)}\n`)
+  order.push({ id: look.id, label: look.label, description: look.description, appearance: theme.appearance, backdrop: theme.css !== undefined })
 }
-// The switcher reads this for list order, numbering and the default.
+// The switcher reads this for list order, numbering, appearance and the default.
 writeFileSync(join(out, 'index.json'), `${JSON.stringify({ default: DEFAULT_LOOK, looks: order }, null, 2)}\n`)
-console.log(`Wrote ${order.length} T3 themes to ${out}: ${order.map(l => l.id).join(', ')}`)
+console.log(`Wrote ${order.length} T3 themes to ${out}: ${order.map(l => `${l.id}${l.backdrop ? ' (backdrop)' : ''}`).join(', ')}`)
+for (const note of notes) console.log(`  ${note}`)

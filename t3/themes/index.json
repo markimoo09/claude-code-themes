@@ -4,27 +4,37 @@
     {
       "id": "cosmos",
       "label": "Cosmos",
-      "description": "Black hole, spiral galaxy and nebulae from the portfolio"
+      "description": "Black hole, spiral galaxy and nebulae from the portfolio",
+      "appearance": "dark",
+      "backdrop": true
     },
     {
       "id": "pixel-cats",
       "label": "Pixel cats",
-      "description": "Pixel and Charlie in a sunny pixel room"
+      "description": "Pixel and Charlie in a sunny pixel room",
+      "appearance": "light",
+      "backdrop": true
     },
     {
       "id": "dark-fleet",
       "label": "Dark fleet",
-      "description": "A dark warrior with a red blade, a wedge fleet and a battle station"
+      "description": "A dark warrior with a red blade, a wedge fleet and a battle station",
+      "appearance": "dark",
+      "backdrop": true
     },
     {
       "id": "neon-tokyo",
       "label": "Neon Tokyo",
-      "description": "Pixel-art Tokyo at night: Skytree, Tokyo Tower, neon signs and sakura"
+      "description": "Pixel-art Tokyo at night: Skytree, Tokyo Tower, neon signs and sakura",
+      "appearance": "dark",
+      "backdrop": true
     },
     {
       "id": "marina-bay",
       "label": "Marina Bay",
-      "description": "Pixel-art Singapore at night: Marina Bay Sands, the Merlion and the Supertrees"
+      "description": "Pixel-art Singapore at night: Marina Bay Sands, the Merlion and the Supertrees",
+      "appearance": "dark",
+      "backdrop": true
     }
   ]
 }

@@ -4,7 +4,10 @@
 //   node t3/look.mjs list            the same
 //   node t3/look.mjs <name|number>   switch to a look
 //   node t3/look.mjs next            the next look in the list, then off, then round again
-//   node t3/look.mjs off             back to T3's own theme (T3 Chat)
+//   node t3/look.mjs off             back to T3's own theme (T3 Chat), in OFF_APPEARANCE mode
+//
+// After a switch it prints a last line `t3-appearance: light|dark`. The t3 CLI cannot set T3's
+// light/dark mode, so the /t3-theme skill passes that line to T3's t3_theme_set tool.
 //
 // The pick is T3's environment theme (`t3 theme set`), so every connected T3 window switches
 // to it and new windows start with it. Each switch rebuilds the theme files first, so color
@@ -18,6 +21,8 @@ import { fileURLToPath } from 'node:url'
 const OFF = 'off'
 // What `off` sets: T3's own default theme. `t3 theme clear` would leave windows as they are.
 const T3_OWN_THEME = 't3-chat'
+// The mode `off` returns T3 to: 'light', 'dark' or 'system'.
+const OFF_APPEARANCE = 'dark'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const themesDir = join(here, 'themes')
@@ -69,13 +74,12 @@ function apply(looks, id) {
   try {
     if (id === OFF) {
       execFileSync(t3, ['theme', 'set', T3_OWN_THEME], { stdio: 'pipe' })
-      // A look made only for light or dark switches T3's mode with it, and T3 offers no way to
-      // set the mode from outside the app, so the mode stays where the last look left it.
-      return 'Theme off: T3’s own theme is back. If it is in the wrong mode, pick Light, Dark or System under Settings → Appearance.'
+      // A look made only for light or dark switches T3's mode with it; put the mode back too.
+      return `Theme off: T3’s own theme is back.\nt3-appearance: ${OFF_APPEARANCE}`
     }
     const look = looks.find(l => l.id === id)
     execFileSync(t3, ['theme', 'set', '--id', id, join(themesDir, `${id}.json`)], { stdio: 'pipe' })
-    return `Theme: ${look.label}.`
+    return `Theme: ${look.label}${look.backdrop ? '' : ' (colors only for now: its scene is too big for a T3 theme)'}.\nt3-appearance: ${look.appearance}`
   } catch (error) {
     const said = error.stderr?.toString().trim() || error.message
     return `${id} was not applied: ${said}`

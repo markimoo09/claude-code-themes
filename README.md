@@ -52,11 +52,13 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 
 ## T3 Code
 
-`t3/` turns each look into a T3 Code theme. T3 themes are colors only, so the moving scenes stay in the Claude apps.
+`t3/` turns each look into a T3 Code theme: its colors, and its moving scene behind the chat with a frosted panel behind the chat column so text stays readable.
 
 - `node t3/build.mjs` writes `t3/themes/<id>.json` from `LOOKS`.
+- T3 caps a theme's CSS at 50,000 characters and centers the chat in a column, so each scene has a T3 version in `t3/scenes/<id>.mjs`. It takes the original scene's SVG, makes it smaller, and moves the main subjects into the margins beside the column. A new look with no T3 version gets colors only if its scene is too big. `t3/lib.mjs` describes the layout.
+- `node t3/preview.mjs <id>` checks the size and renders stills: the original, the T3 scene, and the T3 layout at full width and with the sidebar open.
 - `node t3/look.mjs [name | number | next | off]` works like `/custom-theme`. It sets the pick as T3's environment theme (`t3 theme set`), so every T3 window switches, and new windows start with it. `off` sets T3 Chat, T3's own theme. Each switch rebuilds the files first.
-- `/t3-theme` (the skill in `~/.claude/skills/t3-theme`) runs it from a chat.
+- `/t3-theme` (the skill in `~/.claude/skills/t3-theme`) runs it from a chat, and also sets T3's light or dark mode to match the look.
 
 ## Install
 
