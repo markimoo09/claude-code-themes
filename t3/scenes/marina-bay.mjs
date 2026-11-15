@@ -103,6 +103,34 @@ const T3_SPOTS = {
 // panel already sits over the chat column.
 const SCRIM_DARKEST = '.38'
 
+// Calmer effects for T3, by request: [original, T3] edits to the scene's own CSS. The lasers dim
+// and switch half as fast, the fireworks come half as often (each burst pops just as fast), and
+// the beacon, spire lights, Supertree swap, water shimmer and Merlion jet slow down.
+const CALMER = [
+  ['.beacon { animation: beacon 2.4s', '.beacon { animation: beacon 4.8s'],
+  ['.cap { animation: cap 1.8s', '.cap { animation: cap 5.4s'],
+  ['.cap1 { animation-delay: -1.2s; }', '.cap1 { animation-delay: -3.6s; }'],
+  ['.cap2 { animation-delay: -0.6s; }', '.cap2 { animation-delay: -1.8s; }'],
+  ['.laser { animation: laser 12s', '.laser { animation: laser 24s'],
+  ['.laser1 { animation-delay: -11s; }', '.laser1 { animation-delay: -22s; }'],
+  ['.laser2 { animation-delay: -10s; }', '.laser2 { animation-delay: -20s; }'],
+  ['@keyframes laser { 0% { opacity: 1; } 8.33% { opacity: 0; } 25% { opacity: 1; } 33.33% { opacity: 0; } }',
+    '@keyframes laser { 0% { opacity: .55; } 8.33% { opacity: 0; } 25% { opacity: .55; } 33.33% { opacity: 0; } }'],
+  ['.st-a { animation: st 8s', '.st-a { animation: st 16s'],
+  ['animation: st 8s step-end infinite; animation-delay: -4s;', 'animation: st 16s step-end infinite; animation-delay: -8s;'],
+  ['.sh-a, .sh-b { animation: tw 1.6s', '.sh-a, .sh-b { animation: tw 4s'],
+  ['.sh-b { animation-delay: -0.8s; }', '.sh-b { animation-delay: -2s; }'],
+  ['.jet-a, .jet-b { animation: jet 0.5s', '.jet-a, .jet-b { animation: jet 1.6s'],
+  ['.jet-b { animation-delay: -0.25s; }', '.jet-b { animation-delay: -0.8s; }'],
+  ['.fw { animation: 11s', '.fw { animation: 22s'],
+  ['@keyframes fw0 { 0% { opacity: 1; } 3% { opacity: 0; } }', '@keyframes fw0 { 0% { opacity: 1; } 1.5% { opacity: 0; } }'],
+  ['@keyframes fw1 { 0% { opacity: 0; } 3% { opacity: 1; } 7% { opacity: 0; } }', '@keyframes fw1 { 0% { opacity: 0; } 1.5% { opacity: 1; } 3.5% { opacity: 0; } }'],
+  ['@keyframes fw2 { 0% { opacity: 0; } 7% { opacity: 1; } 10% { opacity: 0.5; } 13% { opacity: 0; } }',
+    '@keyframes fw2 { 0% { opacity: 0; } 3.5% { opacity: 1; } 5% { opacity: 0.5; } 6.5% { opacity: 0; } }'],
+  ['.at-fw2 .fw { animation-delay: -4s; }', '.at-fw2 .fw { animation-delay: -8s; }'],
+  ['.at-fw3 .fw { animation-delay: -7.5s; }', '.at-fw3 .fw { animation-delay: -15s; }'],
+]
+
 function placeForT3(svg) {
   for (const [name, [x, y, s]] of Object.entries(T3_SPOTS)) {
     let found = 0
@@ -350,6 +378,10 @@ export default function marinaBayT3(source) {
   const veil = /(<linearGradient id="g-scrim"[^>]*>(?:<stop [^>]*\/>){6})/.exec(source)
   need(veil, 'the g-scrim veil gradient')
   source = source.replace(veil[1], veil[1].replace(/stop-opacity="0?\.66"/g, `stop-opacity="${SCRIM_DARKEST}"`))
+  for (const [from, to] of CALMER) {
+    need(source.split(from).length === 2, `exactly one "${from}" in the scene's CSS`)
+    source = source.replace(from, to)
+  }
   const svg = parse(source)
   let style
   walk(svg, n => {
