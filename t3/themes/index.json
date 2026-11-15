@@ -35,6 +35,13 @@
       "description": "Pixel-art Singapore at night: Marina Bay Sands, the Merlion and the Supertrees",
       "appearance": "dark",
       "backdrop": true
+    },
+    {
+      "id": "kyoto-sunset",
+      "label": "Kyoto sunset",
+      "description": "Pixel-art Kyoto at sunset: a towering pagoda on its terrace, a torii up stone steps under red maples",
+      "appearance": "dark",
+      "backdrop": true
     }
   ]
 }
