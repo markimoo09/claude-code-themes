@@ -23,10 +23,10 @@ export const SCENE_BUDGET = 47_000
 // 1208–1510 at a full-width window.
 export const PANEL_PAD = '3rem'
 // Per-look panel tint where the default is too heavy, by request.
-export const PANEL_TINT = { 'neon-tokyo': 0.14, 'marina-bay': 0.14 }
+export const PANEL_TINT = { 'neon-tokyo': 0.14, 'marina-bay': 0.14, 'kyoto-sakura': 0.24 }
 // Per-look panel blur in px where the default 6 is too much, by request: the scene's own veil
 // already dims the middle enough.
-export const PANEL_BLUR = { 'marina-bay': 1.5 }
+export const PANEL_BLUR = { 'marina-bay': 1.5, 'kyoto-sakura': 2 }
 export const PANEL_FADE = '7rem'
 
 const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16))

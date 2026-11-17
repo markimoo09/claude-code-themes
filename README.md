@@ -30,6 +30,7 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 | 4 | `neon-tokyo` | Dark. Pixel-art Tokyo at night: the Skytree across a full moon, Mt Fuji, the lit Tokyo Tower, neon katakana signs, the tail of a departing train, a scramble crossing, a cherry tree with red lanterns, and a cat on a vending machine. |
 | 5 | `marina-bay` | Dark. Pixel-art Singapore at night across Marina Bay: Marina Bay Sands with its SkyPark and a laser show, the Merlion spouting into the bay, the Downtown Core and the Singapore Flyer, the glowing Supertrees, the ArtScience Museum's lotus, a bumboat and fireworks. |
 | 6 | `kyoto-sunset` | Dark. Pixel-art Kyoto at sunset: a towering five-storey pagoda, its tiled eaves, brackets, railings and bronze spire lit by a low sun, on a stone terrace with steps and lanterns; stone steps up a wall to a vermilion torii under big red maples, with rocks and pines; ridgelines fading into haze over a forested valley, clouds lit from below, drifting leaves and birds crossing. |
+| 7 | `kyoto-sakura` | Light. Pixel-art Kyoto in spring on a clear day: a vermilion three-storey pagoda with white plaster, gold accents, dark upturned eaves and a tall spire among spring-green trees and cherries; cherry branches dense with pale pink blossom arching in from the top and up the left side over a temple roof and a wooden railing; a forested hill, soft white clouds and drifting petals. |
 
 ### Cosmos
 
@@ -54,6 +55,10 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 ### Kyoto sunset
 
 ![Kyoto sunset](preview-kyoto-sunset.png)
+
+### Kyoto sakura
+
+![Kyoto sakura](preview-kyoto-sakura.png)
 
 ## T3 Code
 

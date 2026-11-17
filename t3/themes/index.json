@@ -42,6 +42,13 @@
       "description": "Pixel-art Kyoto at sunset: a towering pagoda on its terrace, a torii up stone steps under red maples",
       "appearance": "dark",
       "backdrop": true
+    },
+    {
+      "id": "kyoto-sakura",
+      "label": "Kyoto sakura",
+      "description": "Pixel-art Kyoto in spring: a vermilion pagoda on the hillside, framed by cherry blossom",
+      "appearance": "light",
+      "backdrop": true
     }
   ]
 }
