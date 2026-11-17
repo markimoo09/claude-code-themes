@@ -1,5 +1,6 @@
 import type { Look } from './types'
 
+import { christmasEve } from './christmas-eve'
 import { cosmos } from './cosmos'
 import { darkFleet } from './dark-fleet'
 import { kyotoSakura } from './kyoto-sakura'
@@ -36,7 +37,7 @@ function versioned(look: Look): Look {
 
 // Every look `/custom-theme` can switch to, in the order it lists and `next` cycles them.
 // To add one: write hooks/looks/<id>.ts exporting a Look, then list it here.
-export const LOOKS: readonly Look[] = [cosmos, pixelCats, darkFleet, neonTokyo, marinaBay, kyotoSunset, kyotoSakura].map(versioned)
+export const LOOKS: readonly Look[] = [cosmos, pixelCats, darkFleet, neonTokyo, marinaBay, kyotoSunset, kyotoSakura, christmasEve].map(versioned)
 
 // Used until a look is picked with /custom-theme; after that the last pick is used.
 export const DEFAULT_LOOK = 'pixel-cats'

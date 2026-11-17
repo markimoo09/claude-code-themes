@@ -31,6 +31,7 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 | 5 | `marina-bay` | Dark. Pixel-art Singapore at night across Marina Bay: Marina Bay Sands with its SkyPark and a laser show, the Merlion spouting into the bay, the Downtown Core and the Singapore Flyer, the glowing Supertrees, the ArtScience Museum's lotus, a bumboat and fireworks. |
 | 6 | `kyoto-sunset` | Dark. Pixel-art Kyoto at sunset: a towering five-storey pagoda, its tiled eaves, brackets, railings and bronze spire lit by a low sun, on a stone terrace with steps and lanterns; stone steps up a wall to a vermilion torii under big red maples, with rocks and pines; ridgelines fading into haze over a forested valley, clouds lit from below, drifting leaves and birds crossing. |
 | 7 | `kyoto-sakura` | Light. Pixel-art Kyoto in spring on a clear day: a vermilion three-storey pagoda with white plaster, gold accents, dark upturned eaves and a tall spire among spring-green trees and cherries; cherry branches dense with pale pink blossom arching in from the top and up the left side over a temple roof and a wooden railing; a forested hill, soft white clouds and drifting petals. |
+| 8 | `christmas-eve` | Dark and warm. Pixel-art Christmas eve on a snowy night: a tall fir heavy with snow, wrapped in gold garland and twinkling bulbs, hung with baubles, a glowing star on top and presents at its foot; a log cabin under a thick roof of snow with icicles, firelit windows, a wreath on the door and smoke from its chimney, a snowman in a striped scarf in front; a full moon, a sleigh crossing the sky now and then, snowy hills, pines and a village of lit windows, falling snow, holly and a strand of big bulbs in the top corners. |
 
 ### Cosmos
 
@@ -59,6 +60,10 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 ### Kyoto sakura
 
 ![Kyoto sakura](preview-kyoto-sakura.png)
+
+### Christmas eve
+
+![Christmas eve](preview-christmas-eve.png)
 
 ## T3 Code
 

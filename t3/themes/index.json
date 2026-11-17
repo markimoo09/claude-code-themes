@@ -49,6 +49,13 @@
       "description": "Pixel-art Kyoto in spring: a vermilion pagoda on the hillside, framed by cherry blossom",
       "appearance": "light",
       "backdrop": true
+    },
+    {
+      "id": "christmas-eve",
+      "label": "Christmas eve",
+      "description": "Pixel-art Christmas eve: a lit tree with presents in the snow, a glowing log cabin and a snowman under a full moon",
+      "appearance": "dark",
+      "backdrop": true
     }
   ]
 }
