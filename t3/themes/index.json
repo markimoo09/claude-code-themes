@@ -11,8 +11,8 @@
     {
       "id": "pixel-cats",
       "label": "Pixel cats",
-      "description": "Pixel and Charlie in a sunny pixel room",
-      "appearance": "light",
+      "description": "Pixel and Charlie at home on a cozy night: yarn, a bookshelf and a cat tree",
+      "appearance": "dark",
       "backdrop": true
     },
     {

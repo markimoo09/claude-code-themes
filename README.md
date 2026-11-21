@@ -25,7 +25,7 @@ Keep each scene SVG under 131,072 characters. For low CPU use, avoid blur filter
 | # | Name | Look |
 | --- | --- | --- |
 | 1 | `cosmos` | Dark. A tilted black hole and a turning spiral galaxy over cyan, violet and ember nebulae. |
-| 2 | `pixel-cats` | Light. Pixel art of two fluffy cats, Pixel and Charlie, in a sunny room. |
+| 2 | `pixel-cats` | Dark and cozy. Pixel art of two fluffy cats at home at night: Pixel sitting by his yarn in front of a bookshelf lit by a lamp, under a hanging plant; Charlie loafing on top of a cat tree by a moonlit window, her tail over the edge; fairy lights, framed pictures and a round rug. |
 | 3 | `dark-fleet` | Dark and cinematic. A hooded warrior with a red energy blade, a wedge-shaped fleet and a moon-sized battle station. |
 | 4 | `neon-tokyo` | Dark. Pixel-art Tokyo at night: the Skytree across a full moon, Mt Fuji, the lit Tokyo Tower, neon katakana signs, the tail of a departing train, a scramble crossing, a cherry tree with red lanterns, and a cat on a vending machine. |
 | 5 | `marina-bay` | Dark. Pixel-art Singapore at night across Marina Bay: Marina Bay Sands with its SkyPark and a laser show, the Merlion spouting into the bay, the Downtown Core and the Singapore Flyer, the glowing Supertrees, the ArtScience Museum's lotus, a bumboat and fireworks. |
