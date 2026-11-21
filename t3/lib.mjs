@@ -29,6 +29,19 @@ export const PANEL_TINT = { 'neon-tokyo': 0.14, 'marina-bay': 0.14, 'kyoto-sakur
 export const PANEL_BLUR = { 'marina-bay': 1.5, 'kyoto-sakura': 2 }
 export const PANEL_FADE = '7rem'
 
+// Looks whose T3 scene is shown still, by request. T3 paints the scene as an SVG background
+// image, and the GPU redraws an animated one every frame, which drains power. A page CSS rule
+// can't reach inside a background image, so the pause goes into the SVG's own <style>.
+export const STILL = new Set(['neon-tokyo', 'kyoto-sakura'])
+const PAUSE = '*{animation-play-state:paused!important}'
+
+/** The SVG with its CSS animations paused, so it draws one frame and stays put. */
+export function pauseSvg(svg) {
+  const end = svg.lastIndexOf('</style>')
+  if (end === -1) throw new Error('no <style> to pause the animations in')
+  return `${svg.slice(0, end)}${PAUSE}${svg.slice(end)}`
+}
+
 const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16))
 const rgba = (h, a) => `rgba(${hexRgb(h).join(',')},${a})`
 
@@ -114,13 +127,14 @@ export function svgToCssUrl(svg) {
 
 /**
  * The scene T3 shows for a look: its T3 version from t3/scenes/<id>.mjs when there is one,
- * else the original. Minified either way. Returns the SVG and the length of its url().
+ * else the original. Minified either way, and paused for a look in STILL. Returns the SVG and
+ * the length of its url().
  */
 export async function t3SceneOf(look) {
   const source = sceneOf(look)
   if (source === undefined) return undefined
   const adapter = join(T3_DIR, 'scenes', `${look.id}.mjs`)
   const svg = existsSync(adapter) ? (await import(pathToFileURL(adapter).href)).default(source) : source
-  const min = minifySvg(svg)
+  const min = STILL.has(look.id) ? pauseSvg(minifySvg(svg)) : minifySvg(svg)
   return { svg: min, length: svgToCssUrl(min).length, adapted: existsSync(adapter) }
 }
